@@ -27,7 +27,9 @@ helm install myrelease hellochart -f values.yaml
 
 # 8. INSTALL WITH SET PARAMETERS
 helm install myapp hellochart --set replicaCount=3 --set image.tag=v1.2
+--set is only for: Quick testing, temporary changes, or CI/CD pipeline overrides.
 
+Production = Always use values.yaml files
 # 9. VERIFY DEPLOYMENT
 helm status myrelease
 helm list
