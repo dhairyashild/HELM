@@ -110,3 +110,132 @@ image:
 service:
   type: LoadBalancer
   port: 80
+##########################    SAME AS ABOVE COMMANDS JUST ADDED NAMING CONVENTION AS PER ENV AND MICROESRVICE IN JENKINS  #################################
+
+#!/bin/bash
+
+# 🎯 HELM MASTERY COMMANDS - UPDATED NAMING CONVENTION
+# Aligned with Jenkinsfile: user-service, dev/stage/prod environments
+
+# 1. INSTALL HELM
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+
+# 2. CREATE CHART
+helm create user-service
+
+# 3. CLEAN TEMPLATES AND ADD CUSTOM ONES
+rm -rf user-service/templates/*
+# Copy your company template files to user-service/templates/ here
+
+# 4. PACKAGE CHART
+helm package user-service
+
+# 5. INSTALL RELEASE (DEV)
+helm install user-service user-service-0.1.0.tgz
+
+# 6. INSTALL IN SPECIFIC NAMESPACE
+kubectl create namespace dev
+helm install user-service user-service-0.1.0.tgz -n dev
+
+# 7. INSTALL WITH CUSTOM VALUES
+helm install user-service user-service -f values.yaml
+
+# 8. INSTALL WITH SET PARAMETERS
+helm install user-service user-service --set replicaCount=3 --set image.tag=dev-latest
+
+# 9. VERIFY DEPLOYMENT
+helm status user-service
+helm list
+kubectl get all
+
+# 10. UPGRADE RELEASE
+helm upgrade user-service user-service -f values.yaml
+helm upgrade user-service user-service --set replicaCount=5
+
+# 11. CHECK UPGRADE HISTORY
+helm history user-service
+
+# 12. VERIFY VALUES
+helm get values user-service -o yaml
+
+# 13. ROLLBACK
+helm rollback user-service 1
+
+# 14. TEMPLATE FOR DEBUGGING
+helm template user-service user-service
+
+# 15. SHOW CHART VALUES
+helm show values user-service
+
+# 16. ENVIRONMENT SPECIFIC DEPLOYMENTS
+helm install user-service user-service -f values-dev.yaml -n dev
+helm install user-service user-service -f values-stage.yaml -n stage  
+helm install user-service user-service -f values-prod.yaml -n prod
+
+# 17. REPOSITORY OPERATIONS
+helm repo list
+helm repo add company-repo https://charts.company.com
+helm repo update
+
+# 18. UNINSTALL
+helm uninstall user-service
+helm uninstall user-service -n dev
+
+# 19. ADVANCED OPERATIONS
+helm lint user-service
+helm template user-service user-service --debug
+helm get manifest user-service
+helm get hooks user-service
+
+# 20. CHECK ALL REVISIONS
+helm list --all
+helm history user-service
+
+echo "Helm mastery commands completed with enterprise naming convention!"
+
+
+
+
+
+
+
+# values-dev.yaml:
+cat > values-dev.yaml << 'EOF'
+replicaCount: 2
+image:
+  repository: 111111111111.dkr.ecr.us-east-1.amazonaws.com/user-service
+  tag: dev-latest
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 8080
+environment: dev
+EOF
+
+# values-stage.yaml:
+cat > values-stage.yaml << 'EOF'
+replicaCount: 3
+image:
+  repository: 222222222222.dkr.ecr.us-east-1.amazonaws.com/user-service
+  tag: stage-stable
+  pullPolicy: Always
+service:
+  type: ClusterIP
+  port: 8080
+environment: stage
+EOF
+
+# values-prod.yaml:
+cat > values-prod.yaml << 'EOF'
+replicaCount: 4
+image:
+  repository: 333333333333.dkr.ecr.us-east-1.amazonaws.com/user-service
+  tag: prod-stable
+  pullPolicy: Always
+service:
+  type: LoadBalancer
+  port: 8080
+environment: prod
+EOF
