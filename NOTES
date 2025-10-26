@@ -1,0 +1,97 @@
+install 
+
+ curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+$ chmod 700 get_helm.sh
+$ ./get_helm.sh
+
+- helm create <chartname>  —> chrt.yaml , template , values.yaml   , say hellochart
+-  delete the template files , take the companys template 
+-  fill the values according t that , 
+- helm package <chart-name>    —-> here    hellochart
+-  hellochart-0.1.0.tgz file will be created then
+-  helm install <release-name> hellochart-0.1.0.tgz
+-  helm status myrelease, helm list  , k get all
+  
+-  helm install <releasename> -n <ns-name>
+   keep remember revision 
+
+-  helm repo list 
+   list the helm repo
+
+- helm install <release-name> <chart-name> -f values.yaml 
+
+-  update the values and helm install 
+-  helm upgrade <release-name> . <chart-name> -f values.yaml
+-  Verify the Updated Values —-> helm get values <release-name> -o yaml
+                                        helm upgrade my-app ./my-chart --set replicaCount=5
+
+- rollback 
+  helm rollback <release-name> <revision-number> 
+
+-  uninstall
+  helm uninstall <release-name>
+
+-  helm show values <release name >Displays the chart's default values.yaml
+-  procedure is create helm chart , fill values.yaml , run helm install 
+- helm template <release_name> <chart_name>
+
+-  Create Environment-Specific Values Files: Create separate values files for each environment:
+
+values-dev.yaml
+
+values-qa.yaml
+
+values-staging.yaml
+
+values-prod.yaml  
+
+in templates helper.tpl, & notes.txt exist 
+
+why keep values.image because these values may change in future , 
+
+deployment 
+replicas: {{ .values.replicacount}}
+image
+
+
+in values.yaml
+
+
+
+
+
+
+##  EXTRA NOTES
+
+
+
+
+-  helm repo add <repo-name> <repo url > 
+-  helm repo add prometheus-community https //prometheus-community.github.io/helm-charts  // we give alias to repo 
+-  The added repo is stored in Helm’s config directory (~/.config/helm/repositories.yaml).
+-  - caFile: ""
+  certFile: ""
+  insecure_skip_tls_verify: false
+  keyFile: ""
+  name: bitnami
+  pass_credentials_all: false
+  password: ""
+  url: https://charts.bitnami.com/bitnami
+  username: ""
+-  in ~/.cache/helm/repository
+-  bitnami-charts.txt  bitnami-index.yaml 
+
+-  helm repo remove <reponame>
+
+-  helm search repo
+
+- helm index <chart-name>
+
+-  helm lint <release-name> // checks its syntax   , and  it is before it is installing or making its releases
+
+- helm history <release-name> flags  // to check revisions of helm
+
+diff plugin  in 2 releases we updated the replicas ,helm plugin - install, list, or uninstall Helm plugins 
+-  helm diff revision <release-name> 1 2
+
+- helm install <release-name> —debug —dry-run <chart-name >
