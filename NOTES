@@ -6,7 +6,40 @@ chmod 700 get_helm.sh
 ./get_helm.sh
 
 # 2. CREATE CHART
-helm create hellochart
+helm create java-app-chart =================
+charts/: Sub-chart of dependencies -                        ( reusable microservices or shared components as dependencies )
+Chart.yaml: Contains metadata about the chart.
+values.yaml: Contains default configuration values.
+templates/: Contains the Kubernetes resource templates with placeholders for values.
+
+
+# charts/ folder structure:
+java-app-chart/
+├── Chart.yaml              # Chart metadata (name, version, type)
+├── values.yaml             # Default configuration values  
+├── charts/                 # Sub-chart dependencies
+├── templates/              # K8s manifest templates
+│   ├── deployment.yaml    # Main app deployment
+│   ├── service.yaml       # Service definition
+│   ├── hpa.yaml          # Horizontal Pod Autoscaler
+│   ├── ingress.yaml      # Ingress routing
+│   ├── configmap.yaml    # Configuration files
+│   ├── secret.yaml       # Sensitive data
+│   └── _helpers.tpl      # Template helpers
+└── README.md              # Chart documentation
+
+# Usage commands:
+helm install my-app ./java-app-chart                    # Install chart
+helm uninstall my-app                                   # Remove release
+
+#checking commands
+helm lint ./java-app-chart                              # Validate chart syntax
+helm template ./java-app-chart -f values-prod.yaml      # Render templates - give how it loks after putting values in yaml
+
+
+helm package ./java-app-chart                           # Package chart
+helm upgrade my-app ./java-app-chart                    # Upgrade release  
+
 
 # 3. CLEAN TEMPLATES AND ADD CUSTOM ONES
 rm -rf hellochart/templates/*
